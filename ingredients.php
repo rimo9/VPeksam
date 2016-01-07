@@ -5,10 +5,7 @@ $file_name = "ingredients.php";
 <?php
 	//võtame kaasa
 	require_once("functions.php");
-	//kasutaja tahab midagi muuta
-	if(isset($_POST["update"])){
-		updateIngredient($_POST["id"], $_POST["ingredient"], $_POST["price"]);
-	}
+
 	//kas kasutaja tahab kustutada, kas aadressi real on ?delete=??
 	if(isset($_GET["delete"])){
 		deleteIngredient($_GET["delete"]);
@@ -34,8 +31,8 @@ $file_name = "ingredients.php";
 				echo"<td>".$Ingredient_list[$i]->id."</td>";
 				echo"<td>".$Ingredient_list[$i]->ingredient."</td>";
 				echo"<td>".$Ingredient_list[$i]->price."</td>";
-				echo"<td style='text-align:center'><a href='?delete=".$Ingredient_list[$i]->id."'>Remove</a></td>";
-				echo"<td style='text-align:center'><a href='edit.php?edit=".$Ingredient_list[$i]->id."'>Edit</a></td>";
+				echo"<td style='text-align:center'><a href='?delete=".$Ingredient_list[$i]->id."'>Eemalda</a></td>";
+				echo"<td style='text-align:center'><a href='edit.php?edit=".$Ingredient_list[$i]->id."'>Muuda</a></td>";
 				echo"</tr>";
 		}
 	?>

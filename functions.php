@@ -88,4 +88,82 @@
 		$stmt->close();
 		$mysqli->close();
 	}
+	function getRecipeData(){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("SELECT id, nimi FROM retsept_retseptinimi WHERE deleted IS NULL");
+		$stmt->bind_result($id, $recipe_name);
+		$stmt->execute();
+		
+		//tühi masiiv kus hoiame objekte(1rida andmeid)
+		$array = array();
+		//tee tsüklit nii palju kordi kui saad ab'st ühe rea andmeid
+		while($stmt->fetch()){
+			//loon objekti
+			$recipe = new StdClass();
+			$recipe->id = $id;
+			$recipe->recipe = $recipe_name;
+			array_push($array, $recipe);
+		}
+		$stmt->close();
+		$mysqli->close();
+		return $array;
+	}
+	function deleteRecipe($id){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("UPDATE retsept_retseptinimi SET deleted=NOW() WHERE id=?");
+		$stmt->bind_param("i", $id);
+		if($stmt->execute()){
+			//kui on edukas
+			header("Location: recipe.php");
+		}
+		$stmt->close();
+		$mysqli->close();
+	}
+	function updateRecipeName($id, $recipe){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("UPDATE retsept_retseptinimi SET nimi = ? WHERE id = ?");
+		$stmt->bind_param("si", $recipe, $id);
+		//kas õnnestus salvestada
+		if($stmt->execute()){
+			//echo("success");
+		}else{	
+		}
+		$stmt->close();
+		$mysqli->close();
+	}
+	function getSingleRecipeData($edit_id){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("SELECT nimi FROM retsept_retseptinimi WHERE id = ? AND deleted IS NULL");
+		$stmt->bind_param("i", $edit_id);
+		$stmt->bind_result($recipe_name);
+		$stmt->execute();
+		$recipe = new Stdclass();
+		if($stmt->fetch()){
+			$recipe->recipe = $recipe_name;
+		}else{
+			//ei saanud andmeid kätte, sellist id'd ei ole või on kustutatud
+			header("Location: recipe.php");
+			//echo("test");
+		}
+		return $recipe;
+		
+		$stmt->close();
+		$mysqli->close();
+	}
+	function addrecipe ($recipe_name){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("INSERT INTO retsept_retseptinimi (nimi) VALUES (?)");
+		$stmt->bind_param("s", $recipe_name);
+		$message = "";
+		if($stmt->execute()){
+			//kui sisestus AB'i õnnestus
+			$message = "Retseptinimi on lisatud";
+		}else{
+			//kui midagi läks sisestuse käigus katki
+			echo $stmt->error;
+		}
+		$stmt->close();
+		$mysqli->close();
+		return $message;
+	}
 ?>
