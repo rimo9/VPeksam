@@ -1,10 +1,9 @@
 <?php
-$page_title = "Koostisosad";
-$file_name = "ingredients.php";
-?>
-<?php
+	$page_title = "Koostisosad";
+	$file_name = "ingredients.php";
+
 	//võtame kaasa
-	require_once("functions.php");
+	require_once("header.php");
 
 	//kas kasutaja tahab kustutada, kas aadressi real on ?delete=??
 	if(isset($_GET["delete"])){
@@ -15,7 +14,6 @@ $file_name = "ingredients.php";
 	
 ?>
 <!-- Page Start -->
-<?php require_once("header.php"); ?>
 
 <h2>Koostisosad</h2>
 <table border=1>

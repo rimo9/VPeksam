@@ -1,10 +1,8 @@
 <?php
-$page_title = "Retseptid";
-$file_name = "recipe.php";
-?>
-<?php
-	//võtame kaasa
-	require_once("functions.php");
+	$page_title = "Retseptid";
+	$file_name = "recipe.php";
+	
+	require_once("header.php");
 
 	//kas kasutaja tahab kustutada, kas aadressi real on ?delete=??
 	if(isset($_GET["delete"])){
@@ -31,7 +29,7 @@ $file_name = "recipe.php";
 				echo"<td>".$Recipe_list[$i]->recipe."</td>";
 				echo"<td style='text-align:center'><a href='?delete=".$Recipe_list[$i]->id."'>Eemalda</a></td>";
 				echo"<td style='text-align:center'><a href='editRecipe.php?edit=".$Recipe_list[$i]->id."'>Muuda Nime</a></td>";
-				echo"<td style='text-align:center'><a href='editRecipeIngredients.php?edit=".$Recipe_list[$i]->id."'>Muuda koostisosi</a></td>";
+				echo"<td style='text-align:center'><a href='RecipeIngredients.php?edit=".$Recipe_list[$i]->id."'>Vaata koostisosi</a></td>";
 				echo"</tr>";
 		}
 	?>

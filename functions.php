@@ -166,4 +166,36 @@
 		$mysqli->close();
 		return $message;
 	}
+	function getRecipeIngredientData($recipe_id){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("SELECT retsept_koostiososad.id, koostisosa FROM retsept_koos JOIN retsept_koostiososad ON retsept_koostiososad.id = retsept_koos.koostisosa_id WHERE retsept_koos.deleted IS NULL AND retseptinimi_id = ?");
+		$stmt->bind_param("i", $recipe_id);
+		$stmt->bind_result($id, $ingredient_name);
+		$stmt->execute();
+		
+		//tühi masiiv kus hoiame objekte(1rida andmeid)
+		$array = array();
+		//tee tsüklit nii palju kordi kui saad ab'st ühe rea andmeid
+		while($stmt->fetch()){
+			//loon objekti
+			$recipe = new StdClass();
+			$recipe->id = $id;
+			$recipe->recipe = $ingredient_name;
+			array_push($array, $recipe);
+		}
+		$stmt->close();
+		$mysqli->close();
+		return $array;
+	}
+	function deleteRecipeIngredient($id){
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		$stmt = $mysqli->prepare("UPDATE retsept_koos SET deleted=NOW() WHERE koostisosa_id=? AND retseptinimi_id = ?");
+		$stmt->bind_param("ii", $id, $_SESSION["recipe_id"]);
+		if($stmt->execute()){
+			//kui on edukas
+			header("Location: RecipeIngredients.php");
+		}
+		$stmt->close();
+		$mysqli->close();
+	}
 ?>
