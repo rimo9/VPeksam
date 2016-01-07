@@ -40,6 +40,7 @@ $file_name = "ingredients.php";
 		}
 	?>
 </table>
+<td style='text-align:center'><a href='addIngredient.php'>Lisa koostisosi</a></td>
 
 <?php require_once("footer.php"); ?>
 <!-- Page End -->
